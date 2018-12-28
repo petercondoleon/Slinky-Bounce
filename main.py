@@ -4,13 +4,14 @@ pygame.init()
 # set up SlinkyB window
 size = width, height = 500, 600
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Slinky Bounce")  # Set title to the window
+pygame.display.set_caption("Slinky Bounce")
 backgroundIm = pygame.image.load("background.jpg")
 dead = False
 
 # Colours
 black = (0, 0, 0)
 
+print(pygame.font.get_fonts())
 def text_objects(text, font, colour):
     textSurface = font.render(text, True, colour)
     return textSurface, textSurface.get_rect()
