@@ -1,8 +1,8 @@
 import sys, pygame
 pygame.init()
 
-size = width, height = 500, 400
-speed = [1, 1]
+size = width, height = 500, 600  # SlinkyB window size
+# speed = [1, 1]
 black = 0, 0, 0
 
 screen = pygame.display.set_mode(size)
