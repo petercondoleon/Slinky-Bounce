@@ -10,8 +10,6 @@ from imports import *
 from resources import *
 from objects import *
 
-SCREEN_WIDTH = 500
-SCREEN_HEIGHT = 500
 score = 0
 
 def main():
@@ -24,7 +22,7 @@ def main():
     bg, bg_rect = load_image("background.jpg")
 
     # Initialise objects
-    ball = BouncyBall((math.pi/2, 1))
+    ball = BouncyBall()
     platform1 = Platform()
     platform2 = Platform()
     platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
@@ -32,10 +30,10 @@ def main():
 
     # Labels
     scoreLabel = Label('Score: ', 10, 10, 18)
-    scoreLabel.drawTo(screen)
+    scoreLabel.draw()
 
     fpsLabel = Label('FPS: ', SCREEN_WIDTH-45, 5, 10)
-    fpsLabel.drawTo(screen)
+    fpsLabel.draw()
 
     ballSprite = pygame.sprite.RenderPlain(ball)
     platformSprites = pygame.sprite.RenderPlain((platform1, platform2))
@@ -71,10 +69,10 @@ def main():
         platformSprites.draw(screen)
 
         scoreLabel.setText(f'Score: {score}')
-        scoreLabel.drawTo(screen)
+        scoreLabel.draw()
 
         fpsLabel.setText(f'FPS: {int(clock.get_fps())}')
-        fpsLabel.drawTo(screen)
+        fpsLabel.draw()
 
         # Old platform
         white = (255, 255, 255)

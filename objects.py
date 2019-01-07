@@ -4,11 +4,12 @@
 
 from imports import *
 from resources import *
+from physics import *
 
 class Label():
     """An object for creating labels on screen
     Returns: A label object
-    Functions: blit
+    Functions: setText, setPos, draw
     Attributes: text, size, font, colour, x, y
     """
 
@@ -35,34 +36,28 @@ class Label():
         self.textSurf = self.font.render(self.text, True, self.colour)
         self.textRect = self.textSurf.get_rect().move(self.x, self.y)
 
-    def drawTo(self, surface):
+    def draw(self):
         # Blit to surface at x, y position
-        if isinstance(surface, pygame.Surface):
-            surface.blit(self.textSurf, self.textRect)
-        else:
-            print(f'Unable to blit \'{self._text}\' label to \'{surface}\'.')
+        screen = pygame.display.get_surface()
+        screen.blit(self.textSurf, self.textRect)
 
-class BouncyBall(pygame.sprite.Sprite):
+class BouncyBall(PhysicsSprite):
     """A bouncy ball that bounces around
     Returns: bouncy ball object
-    Functions: update, calcnewpos
-    Attributes: area, vector"""
+    Functions:
+    Attributes: """
 
-    def __init__(self, vector):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self):
+        PhysicsSprite.__init__(self)
         self.image, self.rect = load_image('bouncy_ball.png')
-        screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
-        self.vector = vector
 
     def update(self):
-        newpos = self.calcnewpos(self.rect, self.vector)
-        self.rect = newpos
-
-    def calcnewpos(self, rect, vector):
-        (angle, z) = vector
-        (dx, dy) = (z*math.cos(angle), z*math.sin(angle))
-        return rect.move(dx, dy)
+        PhysicsSprite.update(self)
+        # Check for boundaries
+        if self.y > SCREEN_HEIGHT+60:
+            print(f'before: {self.dy}')
+            self.dy *= -1 # Bouces at half the velocity it fell
+            print(f'after: {self.dy}')
 
 class Platform(pygame.sprite.Sprite):
     """Platforms that can be jumped from
