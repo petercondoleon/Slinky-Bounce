@@ -1,7 +1,7 @@
 
 from imports import *
 
-GRAVITY = 1/80 # Gravity in pixels per second where 1m is 15px
+GRAVITY = 1/15 # Gravity in pixels per second where 1m is 15px
 
 class PhysicsSprite(pygame.sprite.Sprite):
     """A sprite with physics properties

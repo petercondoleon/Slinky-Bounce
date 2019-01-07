@@ -56,7 +56,7 @@ class BouncyBall(PhysicsSprite):
         # Check for boundaries
         if self.y > SCREEN_HEIGHT-60:
             print(f'before: {self.dy}')
-            self.dy *= -1 # Bouces at half the velocity it fell
+            self.dy *= -0.9 # Bouces at half the velocity it fell
             print(f'after: {self.dy}')
 
 class Platform(pygame.sprite.Sprite):
