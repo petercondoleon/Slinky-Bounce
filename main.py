@@ -10,18 +10,15 @@ from imports import *
 from resources import *
 from objects import *
 
+SCREEN_WIDTH = 500
+SCREEN_HEIGHT = 500
+score = 0
+
 def main():
     # Initialise screen
     pygame.init()
-    screen = pygame.display.set_mode((500, 600))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Slinky Bounce")
-
-    ## TODO: find a way to move this to resources.py
-    def text_display(text, size, colour, x, y):
-        textFont = pygame.font.Font('freesansbold.ttf', size)
-        TextSurf, TextRect = text_objects(text, textFont, colour)
-        TextRect = (x, y)
-        screen.blit(TextSurf, TextRect)
 
     # Load Backgound
     bg, bg_rect = load_image("background.jpg")
@@ -30,8 +27,15 @@ def main():
     ball = BouncyBall((math.pi/2, 1))
     platform1 = Platform()
     platform2 = Platform()
-    platform1.rect = platform1.rect.move(random.randint(1,500), random.randint(1,600))
-    platform2.rect = platform2.rect.move(random.randint(1,500), random.randint(1,600))
+    platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
+    platform2.rect = platform2.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
+
+    # Labels
+    scoreLabel = Label('Score: ', 10, 10, 18)
+    scoreLabel.drawTo(screen)
+
+    fpsLabel = Label('FPS: ', SCREEN_WIDTH-45, 5, 10)
+    fpsLabel.drawTo(screen)
 
     ballSprite = pygame.sprite.RenderPlain(ball)
     platformSprites = pygame.sprite.RenderPlain((platform1, platform2))
@@ -59,14 +63,18 @@ def main():
                 continue
 
         screen.blit(bg, (0, 0))
+
         ballSprite.update()
-        platformSprites.update()
         ballSprite.draw(screen)
+
+        platformSprites.update()
         platformSprites.draw(screen)
 
-        # Old font stuff
-        black = (0, 0, 0)
-        text_display('Score', 18, black, 10, 10)
+        scoreLabel.setText(f'Score: {score}')
+        scoreLabel.drawTo(screen)
+
+        fpsLabel.setText(f'FPS: {int(clock.get_fps())}')
+        fpsLabel.drawTo(screen)
 
         # Old platform
         white = (255, 255, 255)

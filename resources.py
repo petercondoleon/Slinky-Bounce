@@ -9,11 +9,7 @@ from imports import *
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, 'resources')
 
-# Text
-def text_objects(text, font, colour):
-    """Render text and return text surface"""
-    textSurface = font.render(text, True, colour)
-    return textSurface, textSurface.get_rect()
+Font = pygame.font.Font
 
 # Images
 def load_image(name):
