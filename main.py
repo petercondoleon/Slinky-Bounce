@@ -23,6 +23,7 @@ def main():
 
     # Initialise objects
     ball = BouncyBall()
+    ball.dx = 2
     platform1 = Platform()
     platform2 = Platform()
     platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
