@@ -70,7 +70,7 @@ def main():
         if player.dy > 0:
             for platform in platformSprites:
                 if player.is_collided_with(platform):
-                    player.bounce(6.5)
+                    player.bounce(10)
                     score += 5
 
         scoreLabel.setText(f'Score: {score}')

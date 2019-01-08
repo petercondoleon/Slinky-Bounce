@@ -12,7 +12,7 @@ data_dir = os.path.join(main_dir, 'resources')
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 650
 
-GRAVITY = 1/15 # Gravity in pixels per second where 1m is 15px
+GRAVITY = 1/6 # Gravity in pixels per second where 1m is 10px
 
 Font = pygame.font.Font
 

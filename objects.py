@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
 
         # Check for boundaries
         if self.y > SCREEN_HEIGHT-self.height:
-            self.bounce(6.5)                        # Player below screen
+            self.bounce(10)                        # Player below screen
         elif self.x > SCREEN_WIDTH-self.width/2:
             self.x = -self.width/2
         elif self.x < -self.width/2:
