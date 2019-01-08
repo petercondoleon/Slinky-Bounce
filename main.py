@@ -10,8 +10,6 @@ from imports import *
 from resources import *
 from objects import *
 
-score = 0
-
 def main():
     # Initialise screen
     pygame.init()
@@ -21,14 +19,17 @@ def main():
     # Load Backgound
     bg, bg_rect = load_image("background.jpg")
 
-    # Initialise objects
-    ball = Player()
+    score = 0
 
-    ball.y = SCREEN_HEIGHT-120
+    # Initialise objects
+    player = Player()
+
     platform1 = Platform()
     platform2 = Platform()
-    platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
-    platform2.rect = platform2.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
+    platform1.rect = platform1.rect.move(100, 400)
+    platform2.rect = platform2.rect.move(300, 200)
+    #platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
+    #platform2.rect = platform2.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
 
     # Labels
     scoreLabel = Label('Score: ', 10, 10, 18)
@@ -37,7 +38,7 @@ def main():
     fpsLabel = Label('FPS: ', SCREEN_WIDTH-45, 5, 10)
     fpsLabel.draw()
 
-    ballSprite = pygame.sprite.RenderPlain(ball)
+    playerSprite = pygame.sprite.RenderPlain(player)
     platformSprites = pygame.sprite.RenderPlain((platform1, platform2))
 
     # Blit everything to the screen
@@ -49,26 +50,28 @@ def main():
 
     while 1:
         clock.tick(60)
+
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type == KEYDOWN:
-                if event.key == K_LEFT:
-                    ball.dx = -2
-                if event.key == K_RIGHT:
-                    ball.dx = 2
-                if event.key == K_SPACE:
-                    continue
-            elif event.type == KEYUP:
-                ball.dx = 0
+            player.handle_event(event)
 
+        # Draw to screen
         screen.blit(bg, (0, 0))
 
-        ballSprite.update()
-        ballSprite.draw(screen)
+        playerSprite.update()
+        playerSprite.draw(screen)
 
         platformSprites.update()
         platformSprites.draw(screen)
+
+        # Check collisions only if player is falling
+        if player.dy > 0:
+            for platform in platformSprites:
+                if player.is_collided_with(platform):
+                    player.bounce(6.5)
+                    score += 5
 
         scoreLabel.setText(f'Score: {score}')
         scoreLabel.draw()
@@ -76,11 +79,7 @@ def main():
         fpsLabel.setText(f'FPS: {int(clock.get_fps())}')
         fpsLabel.draw()
 
-        # Old platform
-        white = (255, 255, 255)
-        pygame.draw.rect(screen, white, (225, 190, 50, 20))
-        pygame.draw.circle(screen, white, (225, 200), 10, 10)
-        pygame.draw.circle(screen, white, (275, 200), 10, 10)
+
 
         pygame.display.flip()
 

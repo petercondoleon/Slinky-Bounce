@@ -49,8 +49,7 @@ class Platform(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('platform.png')
-        screen = pygame.display.get_surface()
-        self.area = screen.get_rect()
+        self.width, self.height = self.rect[2], self.rect[3]
 
     def update(self):
         return
@@ -64,13 +63,11 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('bouncy_ball.png')
-        self.width = self.rect[2]
-        self.height = self.rect[3]
-        self._x = 0
-        self._y = 0
-        self.dx = 0
-        self.dy = 0
+        self.image, self.rect = load_image('player.png')
+        self.sound = load_sound('boing.wav')
+        self.width, self.height = self.rect[2], self.rect[3]
+        self._x, self._y, self.dx, self.dy = (0,0,0,0)
+        self.move_speed = 3
 
     @property
     def x(self):
@@ -91,16 +88,12 @@ class Player(pygame.sprite.Sprite):
         self.rect[1] = int(y)
 
     def bounce(self, amount):
-        "Bounces the player"
+        "Bounces the player by an amount"
         self.dy = -amount
+        self.sound.play()
 
-    def move_left(self, speed):
-        "Moves the player left"
-        self.dx = -speed
-
-    def move_right(self, speed):
-        "Moves the player right"
-        self.dx = speed
+    def is_collided_with(self, sprite):
+        return self.rect.inflate(-5, -5).colliderect(sprite.rect)
 
     def update(self):
         # Physics
@@ -110,8 +103,23 @@ class Player(pygame.sprite.Sprite):
 
         # Check for boundaries
         if self.y > SCREEN_HEIGHT-self.height:
-            self.bounce(6.5)
+            self.bounce(6.5)                        # Player below screen
         elif self.x > SCREEN_WIDTH-self.width/2:
             self.x = -self.width/2
         elif self.x < -self.width/2:
             self.x = SCREEN_WIDTH-self.width/2
+
+    def handle_event(self, event):
+        "Handles pygame events specific to the player"
+        if event.type == KEYDOWN:
+            if event.key == K_LEFT:
+                self.dx = -self.move_speed
+            if event.key == K_RIGHT:
+                self.dx = self.move_speed
+            if event.key == K_SPACE:
+                return
+        if event.type == KEYUP:
+            if event.key == K_LEFT and self.dx == -self.move_speed:
+                self.dx = 0
+            if event.key == K_RIGHT and self.dx == self.move_speed:
+                self.dx = 0
