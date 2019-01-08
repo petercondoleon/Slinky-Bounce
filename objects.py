@@ -4,7 +4,6 @@
 
 from imports import *
 from resources import *
-from physics import *
 
 class Label():
     """An object for creating labels on screen
@@ -41,24 +40,6 @@ class Label():
         screen = pygame.display.get_surface()
         screen.blit(self.textSurf, self.textRect)
 
-class BouncyBall(PhysicsSprite):
-    """A bouncy ball that bounces around
-    Returns: bouncy ball object
-    Functions:
-    Attributes: """
-
-    def __init__(self):
-        PhysicsSprite.__init__(self)
-        self.image, self.rect = load_image('bouncy_ball.png')
-
-    def update(self):
-        PhysicsSprite.update(self)
-        # Check for boundaries
-        if self.y > SCREEN_HEIGHT-60:
-            self.dy *= -0.99 # Bouces at half the velocity it fell
-        elif self.x > SCREEN_WIDTH-60 or self.x < 0:
-            self.dx *= -1
-
 class Platform(pygame.sprite.Sprite):
     """Platforms that can be jumped from
     Returns: platform object
@@ -73,3 +54,64 @@ class Platform(pygame.sprite.Sprite):
 
     def update(self):
         return
+
+class Player(pygame.sprite.Sprite):
+    """A sprite with physics properties
+    Returns: A physics sprite
+    Functions:
+    Attributes:
+    """
+
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_image('bouncy_ball.png')
+        self.width = self.rect[2]
+        self.height = self.rect[3]
+        self._x = 0
+        self._y = 0
+        self.dx = 0
+        self.dy = 0
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, x):
+        self._x = x
+        self.rect[0] = int(x)
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, y):
+        self._y = y
+        self.rect[1] = int(y)
+
+    def bounce(self, amount):
+        "Bounces the player"
+        self.dy = -amount
+
+    def move_left(self, speed):
+        "Moves the player left"
+        self.dx = -speed
+
+    def move_right(self, speed):
+        "Moves the player right"
+        self.dx = speed
+
+    def update(self):
+        # Physics
+        self.x += self.dx
+        self.y += self.dy
+        self.dy += GRAVITY
+
+        # Check for boundaries
+        if self.y > SCREEN_HEIGHT-self.height:
+            self.bounce(6.5)
+        elif self.x > SCREEN_WIDTH-self.width/2:
+            self.x = -self.width/2
+        elif self.x < -self.width/2:
+            self.x = SCREEN_WIDTH-self.width/2

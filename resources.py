@@ -12,6 +12,8 @@ data_dir = os.path.join(main_dir, 'resources')
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 500
 
+GRAVITY = 1/15 # Gravity in pixels per second where 1m is 15px
+
 Font = pygame.font.Font
 
 # Images

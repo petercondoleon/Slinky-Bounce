@@ -22,8 +22,9 @@ def main():
     bg, bg_rect = load_image("background.jpg")
 
     # Initialise objects
-    ball = BouncyBall()
-    ball.dx = 2
+    ball = Player()
+
+    ball.y = SCREEN_HEIGHT-120
     platform1 = Platform()
     platform2 = Platform()
     platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
@@ -53,13 +54,13 @@ def main():
                 sys.exit()
             elif event.type == KEYDOWN:
                 if event.key == K_LEFT:
-                    continue
+                    ball.dx = -2
                 if event.key == K_RIGHT:
-                    continue
+                    ball.dx = 2
                 if event.key == K_SPACE:
                     continue
             elif event.type == KEYUP:
-                continue
+                ball.dx = 0
 
         screen.blit(bg, (0, 0))
 
