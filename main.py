@@ -23,13 +23,16 @@ def main():
 
     # Initialise objects
     player = Player()
+    player.x = SCREEN_WIDTH/2 - player.width/2
+    player.y = SCREEN_HEIGHT - player.height*2
+    player.dy = -5
 
-    platform1 = Platform()
-    platform2 = Platform()
-    platform1.rect = platform1.rect.move(100, 400)
-    platform2.rect = platform2.rect.move(300, 200)
-    #platform1.rect = platform1.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
-    #platform2.rect = platform2.rect.move(random.randint(1,SCREEN_WIDTH), random.randint(1,SCREEN_HEIGHT))
+    base_platform = Platform()
+    base_platform.x = SCREEN_WIDTH/2 - base_platform.width/2
+    base_platform.y =SCREEN_HEIGHT - base_platform.height - 5
+
+    platform1 = Platform(100, 400)
+    platform2 = Platform(300, 200)
 
     # Labels
     scoreLabel = Label('Score: ', 10, 10, 18)
@@ -39,7 +42,7 @@ def main():
     fpsLabel.draw()
 
     playerSprite = pygame.sprite.RenderPlain(player)
-    platformSprites = pygame.sprite.RenderPlain((platform1, platform2))
+    platformSprites = pygame.sprite.RenderPlain((base_platform, platform1, platform2))
 
     # Blit everything to the screen
     screen.blit(bg, (0, 0))

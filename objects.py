@@ -6,12 +6,7 @@ from imports import *
 from resources import *
 
 class Label():
-    """An object for creating labels on screen
-    Returns: A label object
-    Functions: setText, setPos, draw
-    Attributes: text, size, font, colour, x, y
-    """
-
+    "An object for creating labels on screen"
     def __init__(self, text='', x=0, y=0, size=16, colour=(0,0,0), fontName='freesansbold.ttf'):
         self.text = text
         self.font = Font(fontName, size)
@@ -40,34 +35,24 @@ class Label():
         screen = pygame.display.get_surface()
         screen.blit(self.textSurf, self.textRect)
 
-class Platform(pygame.sprite.Sprite):
-    """Platforms that can be jumped from
-    Returns: platform object
-    Functions:
-    Attributes:"""
-
-    def __init__(self):
+class PhysicsSprite(pygame.sprite.Sprite):
+    "A sprite that allows easier manipulation of movement"
+    def __init__(self, imageName):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('platform.png')
-        self.width, self.height = self.rect[2], self.rect[3]
-
-    def update(self):
-        return
-
-class Player(pygame.sprite.Sprite):
-    """A sprite with physics properties
-    Returns: A physics sprite
-    Functions:
-    Attributes:
-    """
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('player.png')
-        self.sound = load_sound('boing.wav')
+        self.image, self.rect = load_image(imageName)
         self.width, self.height = self.rect[2], self.rect[3]
         self._x, self._y, self.dx, self.dy = (0,0,0,0)
-        self.move_speed = 3
+        self._obeys_gravity = False
+        self._hitbox = self.rect
+
+    @property
+    def obeys_gravity(self):
+        "Whether the physics object is affected by gravity"
+        return self._obeys_gravity
+
+    @obeys_gravity.setter
+    def obeys_gravity(self, bool):
+        self._obeys_gravity = bool
 
     @property
     def x(self):
@@ -87,21 +72,51 @@ class Player(pygame.sprite.Sprite):
         self._y = y
         self.rect[1] = int(y)
 
+    @property
+    def hitbox(self):
+        "The rect used for detecting collisions"
+        return self._hitbox
+
+    @hitbox.setter
+    def hitbox(self, rect):
+        self._hitbox = rect
+
+    def is_collided_with(self, sprite):
+        "Returns true if this object is colliding with sprite"
+        return self.hitbox.colliderect(sprite.hitbox)
+
+    def update(self):
+        self.x += self.dx
+        self.y += self.dy
+        if self.obeys_gravity: self.dy += GRAVITY
+
+
+
+class Platform(PhysicsSprite):
+    "Platforms that can be jumped from"
+    def __init__(self, x=0, y=0):
+        PhysicsSprite.__init__(self, 'platform.png')
+        self.x, self.y = x, y
+
+    def update(self):
+        PhysicsSprite.update(self)
+
+class Player(PhysicsSprite):
+    "The Slinky Bounce player"
+    def __init__(self):
+        PhysicsSprite.__init__(self, 'player.png')
+        self.sound = load_sound('boing.wav')
+        self.move_speed = 3
+        self.obeys_gravity = True
+
     def bounce(self, amount):
         "Bounces the player by an amount"
         self.dy = -amount
         self.sound.play()
 
-    def is_collided_with(self, sprite):
-        return self.rect.inflate(-5, -5).colliderect(sprite.rect)
-
     def update(self):
-        # Physics
-        self.x += self.dx
-        self.y += self.dy
-        self.dy += GRAVITY
-
         # Check for boundaries
+        PhysicsSprite.update(self)
         if self.y > SCREEN_HEIGHT-self.height:
             self.bounce(10)                        # Player below screen
         elif self.x > SCREEN_WIDTH-self.width/2:
