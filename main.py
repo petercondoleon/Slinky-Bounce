@@ -74,11 +74,11 @@ def main():
             for platform in platformSprites:
                 if player.is_collided_with(platform):
                     player.bounce(10)
-                    score += 5
 
         # Move the platforms down
         if player.y < SCREEN_HEIGHT/2:
             player.y = SCREEN_HEIGHT/2
+            score += int(-player.dy)
             for platform in platformSprites:
                 platform.dy = -player.dy
 
