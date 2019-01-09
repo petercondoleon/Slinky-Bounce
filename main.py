@@ -76,6 +76,17 @@ def main():
                     player.bounce(10)
                     score += 5
 
+        # Move the platforms down
+        if player.y < SCREEN_HEIGHT/2:
+            player.y = SCREEN_HEIGHT/2
+            for platform in platformSprites:
+                platform.dy = -player.dy
+
+        # Reuse low platforms
+        for platform in platformSprites:
+            if platform.y > SCREEN_HEIGHT:
+                platform.y = 0
+
         scoreLabel.setText(f'Score: {score}')
         scoreLabel.draw()
 
