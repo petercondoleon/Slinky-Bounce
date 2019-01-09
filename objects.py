@@ -106,7 +106,7 @@ class Player(PhysicsSprite):
     def __init__(self):
         PhysicsSprite.__init__(self, 'player.png')
         self.sound = load_sound('boing.wav')
-        self.move_speed = 3
+        self.move_speed = 5
         self.obeys_gravity = True
 
     def bounce(self, amount):

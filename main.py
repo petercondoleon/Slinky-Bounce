@@ -85,7 +85,7 @@ def main():
         # Reuse low platforms
         for platform in platformSprites:
             if platform.y > SCREEN_HEIGHT:
-                platform.y = 0
+                platform.y = 0 - platform.height
 
         scoreLabel.setText(f'Score: {score}')
         scoreLabel.draw()
