@@ -31,6 +31,16 @@ def load_image(name):
         raise SystemExit()
     return image, image.get_rect()
 
+def load_images(names):
+    """Load an array of image names and return image object array"""
+    images = []
+    rects = []
+    for name in names:
+        image, rect = load_image(name)
+        images.append(image)
+        rects.append(rect)
+    return images, rects
+
 # Sounds
 def load_sound(name):
     """Loads sound and return sound object"""
