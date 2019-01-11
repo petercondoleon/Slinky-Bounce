@@ -47,6 +47,7 @@ def main():
 
     playerSprite = pygame.sprite.RenderPlain(player)
     platformSprites = pygame.sprite.RenderPlain((base_platform, platform1, platform2))
+    spikeSprite = pygame.sprite.RenderPlain(spikes)
 
     # Blit everything to the screen
     screen.blit(bg, (0, 0))
@@ -73,8 +74,8 @@ def main():
         platformSprites.update()
         platformSprites.draw(screen)
 
-        spikes.update()
-        spikes.draw(screen)
+        spikeSprite.update()
+        spikeSprite.draw(screen)
 
         # Check collisions only if player is falling
         if player.dy > 0:
