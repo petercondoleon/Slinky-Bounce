@@ -34,6 +34,10 @@ def main():
     platform1 = Platform(100, 400)
     platform2 = Platform(300, 200)
 
+    spikes = Spikes()
+    spikes.x = 0
+    spikes.y = SCREEN_HEIGHT - spikes.height
+
     # Labels
     scoreLabel = Label('Score: ', 10, 10, 18)
     scoreLabel.draw()
@@ -68,6 +72,9 @@ def main():
 
         platformSprites.update()
         platformSprites.draw(screen)
+
+        spikes.update()
+        spikes.draw(screen)
 
         # Check collisions only if player is falling
         if player.dy > 0:

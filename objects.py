@@ -90,7 +90,14 @@ class PhysicsSprite(pygame.sprite.Sprite):
         self.y += self.dy
         if self.obeys_gravity: self.dy += GRAVITY
 
+class Spikes(PhysicsSprite):
+    "Spikes that ends the game"
+    def __init__(self, x=0, y=0):
+        PhysicsSprite.__init__(self, 'spikes.png')
+        self.x, self.y = x, y
 
+    def update(self):
+        PhysicsSprite.update(self)
 
 class Platform(PhysicsSprite):
     "Platforms that can be jumped from"
