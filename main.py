@@ -25,17 +25,14 @@ def main():
     player = Player()
     player.x = SCREEN_WIDTH/2 - player.width/2
     player.y = SCREEN_HEIGHT - player.height*2
-    player.dy = -5
+    player.dy = -6 # This gives the player an initial 'jump' when the game starts
 
-    base_platform = Platform()
-    base_platform.x = SCREEN_WIDTH/2 - base_platform.width/2
-    base_platform.y =SCREEN_HEIGHT - base_platform.height - 5
-
-    platform1 = Platform(100, 400)
-    platform2 = Platform(300, 200)
+    platform1 = Platform(300, 175)
+    platform2 = Platform(100, 375)
+    platform3 = Platform(212, 575) # The first platform for the player
+    platform4 = Platform(80, 775)
 
     spikes = Spikes()
-    spikes.x = 0
     spikes.y = SCREEN_HEIGHT - spikes.height
 
     # Labels
@@ -45,9 +42,10 @@ def main():
     fpsLabel = Label('FPS: ', SCREEN_WIDTH-45, 5, 10)
     fpsLabel.draw()
 
-    playerSprite = pygame.sprite.RenderPlain(player)
-    platformSprites = pygame.sprite.RenderPlain((base_platform, platform1, platform2))
-    spikeSprite = pygame.sprite.RenderPlain(spikes)
+    # Need to add the objects into sprite groups for the game
+    playerSprites = pygame.sprite.RenderPlain(player)
+    platformSprites = pygame.sprite.RenderPlain((platform1, platform2, platform3, platform4))
+    spikeSprites = pygame.sprite.RenderPlain(spikes)
 
     # Blit everything to the screen
     screen.blit(bg, (0, 0))
@@ -68,20 +66,20 @@ def main():
         # Draw to screen
         screen.blit(bg, (0, 0))
 
-        playerSprite.update()
-        playerSprite.draw(screen)
+        playerSprites.update()
+        playerSprites.draw(screen)
 
         platformSprites.update()
         platformSprites.draw(screen)
 
-        spikeSprite.update()
-        spikeSprite.draw(screen)
+        spikeSprites.update()
+        spikeSprites.draw(screen)
 
         # Check collisions only if player is falling
         if player.dy > 0:
             for platform in platformSprites:
                 if player.is_collided_with(platform):
-                    player.bounce(10)
+                    player.bounce(9.5)
 
         # Move the platforms down
         if player.y < SCREEN_HEIGHT/2:
@@ -90,10 +88,11 @@ def main():
             for platform in platformSprites:
                 platform.dy = -player.dy
 
-        # Reuse low platforms
+        # Reuse low platforms but randomize
         for platform in platformSprites:
-            if platform.y > SCREEN_HEIGHT:
-                platform.y = 0 - platform.height
+            if platform.y >= 800:
+                platform.y = -platform.height
+                platform.x = random.randint(25, SCREEN_WIDTH-platform.width-25)
 
         scoreLabel.setText(f'Score: {score}')
         scoreLabel.draw()
