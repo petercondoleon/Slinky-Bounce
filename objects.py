@@ -81,7 +81,7 @@ class PhysicsSprite(pygame.sprite.Sprite):
     def hitbox(self, rect):
         self._hitbox = rect
 
-    def is_collided_with(self, sprite):
+    def collides_with(self, sprite):
         "Returns true if this object is colliding with sprite"
         return self.hitbox.colliderect(sprite.hitbox)
 
@@ -120,6 +120,18 @@ class Player(PhysicsSprite):
         "Bounces the player by an amount"
         self.dy = -amount
         self.sound.play()
+
+    def top_collides_with(self, sprite):
+        "Returns true if the bottom of player contacts sprite"
+        hb = self.hitbox
+        hitbox_top = Rect(hb.left, hb.top, hb.width, 8)
+        return hitbox_top.colliderect(sprite.hitbox)
+
+    def bottom_collides_with(self, sprite):
+        "Returns true if the top of player contacts sprite"
+        hb = self.hitbox
+        hitbox_bottom = Rect(hb.left, hb.top+56, hb.width, 8)
+        return hitbox_bottom.colliderect(sprite.hitbox)
 
     def update(self):
         # Check for boundaries

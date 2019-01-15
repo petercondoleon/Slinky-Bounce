@@ -78,7 +78,7 @@ def main():
         # Check collisions only if player is falling
         if player.dy > 0:
             for platform in platformSprites:
-                if player.is_collided_with(platform):
+                if player.bottom_collides_with(platform):
                     player.bounce(9.5)
 
         # Move the platforms down
