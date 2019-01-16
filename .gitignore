@@ -2,3 +2,4 @@
 .idea
 open_project.app
 __pycache__
+.DS_Store

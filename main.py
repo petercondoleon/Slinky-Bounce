@@ -27,10 +27,10 @@ def main():
     player.y = SCREEN_HEIGHT - player.height*2
     player.dy = -6 # This gives the player an initial 'jump' when the game starts
 
-    platform1 = Platform(300, 175)
-    platform2 = Platform(100, 375)
-    platform3 = Platform(212, 575) # The first platform for the player
-    platform4 = Platform(80, 775)
+    platform1 = Platform(300, 100)
+    platform2 = Platform(100, 300)
+    platform3 = Platform(186, 500) # The first platform for the player
+    platform4 = Platform(80, 600)
 
     spikes = Spikes()
     spikes.y = SCREEN_HEIGHT - spikes.height
@@ -79,7 +79,7 @@ def main():
         if player.dy > 0:
             for platform in platformSprites:
                 if player.bottom_collides_with(platform):
-                    player.bounce(9.5)
+                    player.bounce(9)
 
         # Move the platforms down
         if player.y < SCREEN_HEIGHT/2:
@@ -90,7 +90,7 @@ def main():
 
         # Reuse low platforms but randomize
         for platform in platformSprites:
-            if platform.y >= 800:
+            if platform.y >= SCREEN_HEIGHT+100:
                 platform.y = -platform.height
                 platform.x = random.randint(25, SCREEN_WIDTH-platform.width-25)
 
