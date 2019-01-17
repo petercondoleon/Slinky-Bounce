@@ -13,6 +13,7 @@ class Label():
         self.colour = colour
         self.x = x
         self.y = y
+        self.size = size
         self._update()
 
     def setText(self, text):
@@ -24,6 +25,10 @@ class Label():
         "Changes the position of the label"
         self.x = x
         self.y = y
+        self._update()
+
+    def setSize(self, size):
+        self.size = size
         self._update()
 
     def _update(self):
@@ -115,6 +120,7 @@ class Player(PhysicsSprite):
         self.sound = load_sound('boing.wav')
         self.move_speed = 6
         self.obeys_gravity = True
+        self.is_alive = True
 
     def bounce(self, amount):
         "Bounces the player by an amount"
@@ -137,15 +143,18 @@ class Player(PhysicsSprite):
         # Check for boundaries
         PhysicsSprite.update(self)
         if self.y > SCREEN_HEIGHT-self.height:
-            self.bounce(10)                        # Player below screen
-        elif self.x > SCREEN_WIDTH-self.width/2:
+            # Player died
+            self.obeys_gravity = False
+            self.dy = 0
+            self.is_alive = False
+        if self.x > SCREEN_WIDTH-self.width/2:
             self.x = -self.width/2
-        elif self.x < -self.width/2:
+        if self.x < -self.width/2:
             self.x = SCREEN_WIDTH-self.width/2
 
     def handle_event(self, event):
         "Handles pygame events specific to the player"
-        if event.type == KEYDOWN:
+        if event.type == KEYDOWN and self.is_alive:
             if event.key == K_LEFT:
                 self.dx = -self.move_speed
             if event.key == K_RIGHT:

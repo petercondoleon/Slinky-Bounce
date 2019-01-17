@@ -42,6 +42,9 @@ def main():
     fpsLabel = Label('FPS: ', SCREEN_WIDTH-45, 5, 10)
     fpsLabel.draw()
 
+    gameOverLabel = Label('GAME OVER', SCREEN_WIDTH/2-100, SCREEN_HEIGHT/2-16, 32)
+    gameOverLabel.draw()
+
     # Need to add the objects into sprite groups for the game
     playerSprites = pygame.sprite.RenderPlain(player)
     platformSprites = pygame.sprite.RenderPlain((platform1, platform2, platform3, platform4))
@@ -100,6 +103,8 @@ def main():
         fpsLabel.setText(f'FPS: {int(clock.get_fps())}')
         fpsLabel.draw()
 
+        if not player.is_alive:
+            gameOverLabel.draw()
 
 
         pygame.display.flip()
