@@ -23,14 +23,23 @@ def main():
 
     # Initialise objects
     player = Player()
-    player.x = SCREEN_WIDTH/2 - player.width/2
-    player.y = SCREEN_HEIGHT - player.height*2
-    player.dy = -6 # This gives the player an initial 'jump' when the game starts
+    platform1 = Platform()
+    platform2 = Platform()
+    platform3 = Platform()
+    platform4 = Platform()
 
-    platform1 = Platform(300, 100)
-    platform2 = Platform(100, 300)
-    platform3 = Platform(186, 500) # The first platform for the player
-    platform4 = Platform(80, 600)
+    def reset_game():
+        player.is_alive = True
+        player.obeys_gravity = True
+        player.x = SCREEN_WIDTH/2 - player.width/2
+        player.y = SCREEN_HEIGHT - player.height*2
+        player.dy = -6 # This gives the player an initial 'jump' when the game starts
+        platform1.set_position(300, 100)
+        platform2.set_position(100, 300)
+        platform3.set_position(186, 500)
+        platform4.set_position(80, 600)
+
+    reset_game()
 
     spikes = Spikes()
     spikes.y = SCREEN_HEIGHT - spikes.height
@@ -64,6 +73,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_r:
+                    if not player.is_alive:
+                        reset_game()
+                        score = 0
             player.handle_event(event)
 
         # Draw to screen

@@ -77,6 +77,10 @@ class PhysicsSprite(pygame.sprite.Sprite):
         self._y = y
         self.rect[1] = int(y)
 
+    def set_position(self, x, y):
+        "Sets the x and y position of the sprite"
+        (self.x, self.y) = (x, y)
+
     @property
     def hitbox(self):
         "The rect used for detecting collisions"
@@ -145,7 +149,7 @@ class Player(PhysicsSprite):
         if self.y > SCREEN_HEIGHT-self.height:
             # Player died
             self.obeys_gravity = False
-            self.dy = 0
+            self.dx, self.dy = 0,0
             self.is_alive = False
         if self.x > SCREEN_WIDTH-self.width/2:
             self.x = -self.width/2
