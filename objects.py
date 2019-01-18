@@ -110,9 +110,34 @@ class Spikes(PhysicsSprite):
 
 class Platform(PhysicsSprite):
     "Platforms that can be jumped from"
-    def __init__(self, x=0, y=0):
+    def __init__(self):
         PhysicsSprite.__init__(self, 'platform.png')
-        self.x, self.y = x, y
+        self._is_breakable = False
+
+    @property
+    def obeys_gravity(self):
+        "Whether the physics object is affected by gravity"
+        return self._obeys_gravity
+
+    @obeys_gravity.setter
+    def obeys_gravity(self, bool):
+        self._obeys_gravity = bool
+        if bool:
+            self.image = load_image('platform_weak_broken.png')[0]
+        else:
+            self.image = load_image('platform_weak.png')[0]
+
+    @property
+    def is_breakable(self):
+        return self._is_breakable
+
+    @is_breakable.setter
+    def is_breakable(self, bool):
+        self._is_breakable = bool
+        if bool:
+            self.image = load_image('platform_weak.png')[0]
+        else:
+            self.image = load_image('platform.png')[0]
 
     def update(self):
         PhysicsSprite.update(self)

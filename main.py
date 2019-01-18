@@ -23,6 +23,7 @@ def main():
 
     # Initialise objects
     player = Player()
+
     platform1 = Platform()
     platform2 = Platform()
     platform3 = Platform()
@@ -66,6 +67,9 @@ def main():
     # Initialise clock
     clock = pygame.time.Clock()
 
+    # Platform break sound
+    breakSound = load_sound('break.wav')
+
     while 1:
         clock.tick(60)
 
@@ -97,19 +101,31 @@ def main():
             for platform in platformSprites:
                 if player.bottom_collides_with(platform):
                     player.bounce(9)
+                    if platform.is_breakable:
+                        platform.obeys_gravity = True
+                        breakSound.play()
 
         # Move the platforms down
         if player.y < SCREEN_HEIGHT/2:
             player.y = SCREEN_HEIGHT/2
             score += int(-player.dy)
             for platform in platformSprites:
-                platform.dy = -player.dy
+
+                if not platform.obeys_gravity:
+                    platform.dy = -player.dy
+                else:
+                    platform.dy = -player.dy*2
 
         # Reuse low platforms but randomize
         for platform in platformSprites:
             if platform.y >= SCREEN_HEIGHT+100:
+                platform.dy = 0
                 platform.y = -platform.height
                 platform.x = random.randint(25, SCREEN_WIDTH-platform.width-25)
+                if platform.obeys_gravity:
+                    platform.obeys_gravity = False
+                    platform.y = -platform.height*7
+                platform.is_breakable = bool(random.getrandbits(1))
 
         scoreLabel.setText(f'Score: {score}')
         scoreLabel.draw()
